@@ -1209,6 +1209,9 @@ tabs();
 render();
 paintGlobalClock();
 connectionState(false);
+// Compteur de visites : un seul appel au script Apps Script, au chargement de la page (les rafraîchissements ne comptent pas).
+const COMPTEUR_URL='https://script.google.com/macros/s/AKfycbyflQg7daaIB6quLLq6al_nwtFq8vnHlRHxcVaCvs0fLrghE-YaLA0PFuH9CSUHfsUzng/exec'; // COLLE ICI L'URL /exec du déploiement Apps Script
+if(COMPTEUR_URL){try{new Image().src=COMPTEUR_URL+(COMPTEUR_URL.includes('?')?'&':'?')+'visite=1&_='+Date.now();}catch(e){}}
 load();
 setInterval(load,30000);
 document.addEventListener('visibilitychange',() => {if(!document.hidden) load();});
