@@ -1189,7 +1189,17 @@ paintGlobalClock();
 connectionState(false);
 // Compteur de visites : un seul appel au script Apps Script, au chargement de la page (les rafraîchissements ne comptent pas).
 const COMPTEUR_URL='https://script.google.com/macros/s/AKfycbyflQg7daaIB6quLLq6al_nwtFq8vnHlRHxcVaCvs0fLrghE-YaLA0PFuH9CSUHfsUzng/exec'; // URL /exec du déploiement Apps Script
-if(COMPTEUR_URL){try{new Image().src=COMPTEUR_URL+(COMPTEUR_URL.includes('?')?'&':'?')+'visite=1&_='+Date.now();}catch(e){}}
+// Identifiant anonyme et aléatoire gardé dans ce navigateur : sert uniquement à compter les visiteurs différents.
+let VISITEUR_ID='';
+try{
+ VISITEUR_ID=localStorage.getItem('compteur_visiteur')||'';
+ if(!/^[a-z0-9]{6,40}$/i.test(VISITEUR_ID)){
+  const nouvelId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID().replace(/-/g,''):Math.random().toString(36).slice(2)+Date.now().toString(36);
+  localStorage.setItem('compteur_visiteur',nouvelId);
+  VISITEUR_ID=localStorage.getItem('compteur_visiteur')===nouvelId?nouvelId:'';
+ }
+}catch(e){VISITEUR_ID='';}
+if(COMPTEUR_URL){try{new Image().src=COMPTEUR_URL+(COMPTEUR_URL.includes('?')?'&':'?')+'visite=1'+(VISITEUR_ID?'&v='+VISITEUR_ID:'')+'&_='+Date.now();}catch(e){}}
 load();
 setInterval(load,30000);
 document.addEventListener('visibilitychange',() => {if(!document.hidden) load();});
